@@ -166,7 +166,7 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
         {
             if (workerThread != null) {
                 workerThread.setCallback(mCallback);
-                workerThread.getUsbRequest().queue(serialBuffer.getReadBuffer(), SerialBuffer.DEFAULT_READ_BUFFER_SIZE);
+//                workerThread.getUsbRequest().queue(serialBuffer.getReadBuffer(), SerialBuffer.DEFAULT_READ_BUFFER_SIZE);
             }
         }else
         {
@@ -308,9 +308,16 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
             this.usbSerialDevice = usbSerialDevice;
         }
 
+        private boolean hasDoneInitialRequest = false;
+
         @Override
         public void doRun()
         {
+            if (!hasDoneInitialRequest) {
+                hasDoneInitialRequest = true;
+                // Queue a new request
+                requestIN.queue(serialBuffer.getReadBuffer(), SerialBuffer.DEFAULT_READ_BUFFER_SIZE);
+            }
             UsbRequest request = connection.requestWait();
             if(request != null && request.getEndpoint().getType() == UsbConstants.USB_ENDPOINT_XFER_BULK
                     && request.getEndpoint().getDirection() == UsbConstants.USB_DIR_IN)
