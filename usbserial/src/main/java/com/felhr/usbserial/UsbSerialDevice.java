@@ -311,9 +311,14 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
         private boolean hasDoneInitialRequest = false;
 
         @Override
-        public void doRun() throws InterruptedException {
+        public void doRun()
+        {
             if (requestIN == null) {
-                Thread.sleep(100);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    return;
+                }
                 return;
             }
             if (!hasDoneInitialRequest) {

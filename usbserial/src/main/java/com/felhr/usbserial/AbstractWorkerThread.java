@@ -22,5 +22,5 @@ abstract class AbstractWorkerThread extends Thread {
         }
     }
 
-    abstract void doRun() throws InterruptedException;
+    abstract void doRun();
 }
